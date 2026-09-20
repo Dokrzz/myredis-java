@@ -1,5 +1,7 @@
 package resp;
 
+import dao.RedisRequest;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,17 +15,19 @@ public class Parser {
 
         validate(tokens);
 
-        HashMap<Command, List<String>> commandToArgs = new HashMap<>();
+        RedisRequest redisRequest = new RedisRequest();
 
         String commandKey = "";
         List<String> commandArgs = new ArrayList<>();
 
-        int firstArgumentIndex = 2;
-        for(int i = firstArgumentIndex; i < tokens.length; i++) {
+
+        for(int i = 0; i < tokens.length; i++) {
             String text = tokens[i];
-            if(i == firstArgumentIndex) {
-                commandKey = text.toUpperCase();
-                System.out.println(commandKey);
+            if(i == 0) {
+                String[] numberOfElementsString = text.split("*");
+
+                int numberOfElements = Integer.parseInt(numberOfElementsString[1]);
+                redisRequest.setNumberOfElements(numberOfElements);
             }
 
             else {
