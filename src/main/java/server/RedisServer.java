@@ -140,6 +140,7 @@ public class RedisServer {
 
         StringBuilder sb = new StringBuilder();
         sb.append(asterikMsgPrefix);
+        sb.append("OK");
         sb.append(msgPostfix);
 
         return sb.toString();
