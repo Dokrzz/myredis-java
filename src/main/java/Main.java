@@ -83,14 +83,8 @@ class Main {
         String responseBytes = msgPrefix + responseByteCount + msgPostfix;
         String responseMessage = "+PONG" + msgPostfix;
 
-        /*
-        ByteBuffer.wrap(responseBytes.getBytes());
-        sc.write(writeBuffer);
+        System.out.println("It happened!");
 
-        writeBuffer.clear();
-
-        writeBuffer =
-         */
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
         sc.write(writeBuffer);
     }
