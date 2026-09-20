@@ -29,7 +29,14 @@ public class Parser {
 
                 if(i == 1) {
                     Command command = Command.valueOf(tokens[i]);
-                    redisRequest.setCommand(command);
+
+                    if(command != null) {
+                        redisRequest.setCommand(command);
+                    }
+
+                    else {
+                        redisRequest.setCommand(Command.UNKNOWN);
+                    }
                 }
 
                 else {

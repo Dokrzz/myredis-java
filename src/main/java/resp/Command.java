@@ -6,7 +6,8 @@ public enum Command {
     PING ("PING"),
     ECHO ("ECHO"),
     GET("GET"),
-    SET ("SET");
+    SET ("SET"),
+    UNKNOWN("UNKNOWN");
 
     private final String value;
 
