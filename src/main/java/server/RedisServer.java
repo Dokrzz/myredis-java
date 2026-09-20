@@ -1,7 +1,7 @@
 package server;
 
+import data.CacheStore;
 import data.RedisRequest;
-import resp.Command;
 import resp.Parser;
 
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +20,9 @@ public class RedisServer {
 
     final private static int DEFAULT_REDIS_PORT = 6379;
     final private static String msgPostfix = "\r\n";
-    final private static String msgPrefix = "$";
-    
+    final private static String dollarMsgPrefix = "$";
+    final private static String asterikMsgPrefix = "*";
+
     
     public void serve() throws IOException {
         try (ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
@@ -86,8 +86,9 @@ public class RedisServer {
         System.out.println(redisRequest.toString());
 
         switch(redisRequest.getCommand()) {
-            case PING -> responseMessage = getPingResponse();
-            case ECHO -> responseMessage = getEchoResponse(redisRequest);
+            case PING -> responseMessage = handlePingRequest();
+            case ECHO -> responseMessage = handleEchoRequest(redisRequest);
+            case SET -> responseMessage = handleSetRequest(redisRequest);
             default -> responseMessage = "";
         }
 
@@ -95,7 +96,7 @@ public class RedisServer {
         sc.write(writeBuffer);
     }
 
-    private static String getPingResponse() {
+    private static String handlePingRequest() {
         String responseMessage = "";
         byte[] responseMsg = "PONG".getBytes();
 
@@ -104,9 +105,9 @@ public class RedisServer {
         return responseMessage;
     }
 
-    private static String getEchoResponse(RedisRequest redisRequest) {
+    private static String handleEchoRequest(RedisRequest redisRequest) {
         StringBuilder sb = new StringBuilder();
-        sb.append(msgPrefix);
+        sb.append(dollarMsgPrefix);
 
         List<String> elements = redisRequest.getElements();
         for (int i = 0; i < elements.size(); i++) {
@@ -119,6 +120,27 @@ public class RedisServer {
             sb.append(s);
             sb.append(msgPostfix);
         }
+
+        return sb.toString();
+    }
+
+    private static String handleSetRequest(RedisRequest redisRequest) {
+        List<String> elements = redisRequest.getElements();
+
+        if(elements.size() != 2) {
+            throw new RuntimeException();
+        }
+
+        String key = elements.get(0);
+        String value = elements.get(1);
+
+        CacheStore cacheStore = CacheStore.getInstance();
+
+        boolean success = CacheStore.put(key, value);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(asterikMsgPrefix);
+        sb.append(msgPostfix);
 
         return sb.toString();
     }

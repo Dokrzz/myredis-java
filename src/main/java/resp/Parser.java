@@ -26,8 +26,6 @@ public class Parser {
             }
 
             else {
-
-                System.out.println("Text is " + text + "i is " + i);
                 if(i == 2) {
                     Command command = Command.valueOf(tokens[i]);
 
