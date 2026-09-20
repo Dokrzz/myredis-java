@@ -84,7 +84,7 @@ class Main {
         int responseByteCount = responseMsg.length;
 
         String responseBytes = msgPrefix + responseByteCount + msgPostfix;
-        String responseMessage = Arrays.toString(responseMsg) + msgPostfix;
+        String responseMessage = "PONG" + msgPostfix;
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseBytes.getBytes());
         sc.write(writeBuffer);
