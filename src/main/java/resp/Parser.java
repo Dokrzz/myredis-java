@@ -1,12 +1,15 @@
 package resp;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 public class Parser {
     private static final String terminator = "\r\n";
 
     public static HashMap<Command, List<String>> parse(String request) {
-        String[] tokens = Arrays.stream(request.split(terminator)).iterator();
+        String[] tokens = request.split(terminator);
 
         validate(tokens);
 
