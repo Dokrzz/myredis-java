@@ -100,7 +100,7 @@ public class RedisServer {
 
             for (int i = 0; i < arguments.size(); i++) {
                 String s = arguments.get(i);
-                System.out.println("i -> " + i);
+                System.out.println("i -> " + arguments.size());
                 if(i == 0) {
                     sb.append(s.length());
                     sb.append(msgPostfix);
