@@ -11,10 +11,7 @@ public class Parser {
     public static HashMap<Command, List<String>> parse(String request) {
         String[] tokens = request.split(terminator);
 
-        boolean isValid = validate(tokens);
-        if(!isValid) {
-            throw new IllegalArgumentException();
-        }
+        validate(tokens);
 
         HashMap<Command, List<String>> commandToArgs = new HashMap<>();
 
@@ -36,7 +33,7 @@ public class Parser {
             }
         }
 
-        if(!commandKey.isEmpty() && !commandArgs.isEmpty()) {
+        if(!commandKey.isEmpty()) {
             Optional<Command> command = Command.fromValue(commandKey);
 
             command.ifPresent(key -> commandToArgs.put(key, commandArgs));
@@ -46,11 +43,9 @@ public class Parser {
 
     }
 
-    private static boolean validate(String[] tokens) {
-        if(tokens.length < 1) {
-            return false;
+    private static void validate(String[] tokens) {
+        if (tokens.length < 1) {
+            throw new IllegalArgumentException();
         }
-
-        return true;
     }
 }

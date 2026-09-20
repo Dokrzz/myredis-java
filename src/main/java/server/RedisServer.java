@@ -90,7 +90,6 @@ public class RedisServer {
             String responseBytes = msgPrefix + responseByteCount + msgPostfix;
             responseMessage = "+PONG" + msgPostfix;
 
-            System.out.println("here at least");
         }
 
         else if(commandToArgs.containsKey(Command.ECHO)){
