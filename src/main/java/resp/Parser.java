@@ -21,13 +21,17 @@ public class Parser {
         String commandKey = "";
         List<String> commandArgs = new ArrayList<>();
 
-        for(int i = 1; i < tokens.length; i++) {
-            if(i == 1) {
-                commandKey = tokens[i].toUpperCase();
+        for(int i = 2; i < tokens.length; i++) {
+            String text = tokens[i];
+            if(i == 2) {
+                commandKey = text.toUpperCase();
                 System.out.println(commandKey);
             }
 
             else {
+                if(text.charAt(0) == '$')
+                    continue;
+
                 commandArgs.add(tokens[i]);
             }
         }
