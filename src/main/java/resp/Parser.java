@@ -24,6 +24,7 @@ public class Parser {
         for(int i = 1; i < tokens.length; i++) {
             if(i == 1) {
                 commandKey = tokens[i].toUpperCase();
+                System.out.println(commandKey);
             }
 
             else {
