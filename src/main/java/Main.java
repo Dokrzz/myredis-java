@@ -16,6 +16,8 @@ class Main {
 
     final private static int REDIS_PORT = 6379;
     final private static String msgPostfix = "\r\n";
+    final private static String msgPrefix = "$";
+
 
     static void main(String[] args) throws IOException {
         serve(REDIS_PORT);
@@ -81,11 +83,13 @@ class Main {
         byte[] responseMsg = "PONG".getBytes();
         int responseByteCount = responseMsg.length;
 
-        String responseBytes = responseByteCount + msgPostfix;
+        String responseBytes = msgPrefix + responseByteCount + msgPostfix;
         String responseMessage = Arrays.toString(responseMsg) + msgPostfix;
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseBytes.getBytes());
         sc.write(writeBuffer);
+
+        writeBuffer.clear();
 
         writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
         sc.write(writeBuffer);
