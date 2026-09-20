@@ -97,10 +97,16 @@ public class RedisServer {
 
             List<String> arguments = commandToArgs.get(Command.ECHO);
             int numOfArgs = arguments.size();
-            sb.append(numOfArgs);
-            sb.append(msgPostfix);
 
-            for (String s: arguments) {
+
+            for (int i = 0; i < arguments.size(); i++) {
+                String s = arguments.get(i);
+                if(i == 0) {
+                    sb.append(s.length());
+                    sb.append(msgPostfix);
+                    continue;
+                }
+
                 sb.append(s);
                 sb.append(msgPostfix);
             }
