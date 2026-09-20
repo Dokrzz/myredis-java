@@ -1,15 +1,12 @@
 package resp;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Parser {
     private static final String terminator = "\r\n";
 
     public static HashMap<Command, List<String>> parse(String request) {
-        String[] tokens = request.split(terminator);
+        String[] tokens = Arrays.stream(request.split(terminator)).iterator();
 
         validate(tokens);
 
@@ -18,9 +15,10 @@ public class Parser {
         String commandKey = "";
         List<String> commandArgs = new ArrayList<>();
 
-        for(int i = 2; i < tokens.length; i++) {
+        int firstArgumentIndex = 2;
+        for(int i = firstArgumentIndex; i < tokens.length; i++) {
             String text = tokens[i];
-            if(i == 2) {
+            if(i == firstArgumentIndex) {
                 commandKey = text.toUpperCase();
                 System.out.println(commandKey);
             }

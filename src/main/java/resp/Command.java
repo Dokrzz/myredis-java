@@ -4,7 +4,9 @@ import java.util.Optional;
 
 public enum Command {
     PING ("PING"),
-    ECHO ("ECHO");
+    ECHO ("ECHO"),
+    GET("GET"),
+    SET ("SET");
 
     private final String value;
 
