@@ -1,5 +1,3 @@
-package resp;
-
 public class Parser {
     private final String terminator = "\r\n";
 
