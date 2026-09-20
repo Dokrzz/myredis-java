@@ -153,13 +153,32 @@ public class RedisServer {
             throw new RuntimeException();
         }
 
-        String key = elements.get(0);
+        String key = elements.getFirst();
 
         StringBuilder sb = new StringBuilder();
-        sb.append(plusMsgPrefix);
-        Optional<String> value = CacheStore.get(key);
+        sb.append(dollarMsgPrefix);
 
-        value.ifPresent(sb::append);
+        Optional<String> valueOptional = CacheStore.get(key);
+        String value = valueOptional.orElse("");
+
+        int size;
+        if(!value.isEmpty()) {
+            sb.append(value.length());
+        }
+        else {
+            sb.append(-1);
+        }
+
+        sb.append(msgPostfix);
+
+        if(!value.isEmpty()) {
+            sb.append(value);
+            sb.append(msgPostfix);
+        }
+
+
+
+
         sb.append(msgPostfix);
 
         return sb.toString();
