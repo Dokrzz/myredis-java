@@ -1,14 +1,11 @@
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,20 +17,20 @@ class Main {
 
 
     static void main(String[] args) throws IOException {
-        serve(REDIS_PORT);
+        serve();
     }
 
-    private static void serve(int port) throws IOException {
+    private static void serve() throws IOException {
         try (ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
             serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
             serverSocketChannel.configureBlocking(false);
-            serverSocketChannel.bind(new InetSocketAddress("0.0.0.0", port));
+            serverSocketChannel.bind(new InetSocketAddress("0.0.0.0", Main.REDIS_PORT));
 
             Selector selector = Selector.open();
 
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            System.out.println("Redis server listening on port: " + port);
+            System.out.println("Redis server listening on port: " + Main.REDIS_PORT);
 
             while (true) {
                 selector.select();
