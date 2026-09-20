@@ -32,7 +32,6 @@ public class RedisRequest {
     }
 
     public void setCommand(Command command) {
-        System.out.println("Current command: " + command + command.getValue());
         this.command = command;
     }
 

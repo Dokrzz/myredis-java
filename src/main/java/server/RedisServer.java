@@ -89,6 +89,7 @@ public class RedisServer {
             case PING -> responseMessage = handlePingRequest();
             case ECHO -> responseMessage = handleEchoRequest(redisRequest);
             case SET -> responseMessage = handleSetRequest(redisRequest);
+            case GET -> responseMessage = handleGetRequest(redisRequest);
             default -> responseMessage = "";
         }
 
