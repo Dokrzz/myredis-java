@@ -22,7 +22,7 @@ class Main {
   private static void serve(int port) throws IOException {
       try(ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
           serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
-          serverSocketChannel.configureBlocking(true);
+          serverSocketChannel.configureBlocking(false);
           serverSocketChannel.bind(new InetSocketAddress("0.0.0.0", port));
 
           Selector selector = Selector.open();
