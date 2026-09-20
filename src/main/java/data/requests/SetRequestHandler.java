@@ -13,7 +13,7 @@ public class SetRequestHandler implements IRequestHandler {
     public String handle(RedisRequest redisRequest) {
         List<String> elements = redisRequest.getElements();
 
-        if(elements.size() != 2) {
+        if(elements.size() < 2) {
             throw new RuntimeException();
         }
 
