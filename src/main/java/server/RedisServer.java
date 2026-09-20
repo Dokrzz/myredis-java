@@ -21,7 +21,7 @@ public class RedisServer {
     final private static int DEFAULT_REDIS_PORT = 6379;
     final private static String msgPostfix = "\r\n";
     final private static String dollarMsgPrefix = "$";
-    final private static String asterikMsgPrefix = "*";
+    final private static String plusMsgPrefix = "+";
 
     
     public void serve() throws IOException {
@@ -139,7 +139,7 @@ public class RedisServer {
         boolean success = CacheStore.put(key, value);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(asterikMsgPrefix);
+        sb.append(plusMsgPrefix);
         sb.append("OK");
         sb.append(msgPostfix);
 
