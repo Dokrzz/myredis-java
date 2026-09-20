@@ -1,6 +1,7 @@
 package resp;
 
-import data.RedisRequest;
+import data.requests.RedisRequest;
+import enums.Command;
 
 public class Parser {
     private static final String terminator = "\r\n";

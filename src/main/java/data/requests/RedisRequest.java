@@ -1,6 +1,6 @@
-package data;
+package data.requests;
 
-import resp.Command;
+import enums.Command;
 
 import java.util.ArrayList;
 import java.util.List;

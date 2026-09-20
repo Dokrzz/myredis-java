@@ -1,7 +1,6 @@
 package server;
 
-import data.CacheStore;
-import data.RedisRequest;
+import data.requests.*;
 import resp.Parser;
 
 import java.io.IOException;
@@ -13,17 +12,11 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class RedisServer {
 
     final private static int DEFAULT_REDIS_PORT = 6379;
-    final private static String msgPostfix = "\r\n";
-    final private static String dollarMsgPrefix = "$";
-    final private static String plusMsgPrefix = "+";
-
     
     public void serve() throws IOException {
         try (ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
@@ -83,100 +76,29 @@ public class RedisServer {
     private static void writeResponse(SelectionKey key, RedisRequest redisRequest) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
 
-        String responseMessage = "";
         System.out.println(redisRequest.toString());
 
-        switch(redisRequest.getCommand()) {
-            case PING -> responseMessage = handlePingRequest();
-            case ECHO -> responseMessage = handleEchoRequest(redisRequest);
-            case SET -> responseMessage = handleSetRequest(redisRequest);
-            case GET -> responseMessage = handleGetRequest(redisRequest);
+        String responseMessage = switch(redisRequest.getCommand()) {
+            case PING -> {
+                var requestHandler = new PingRequestHandler();
+                yield requestHandler.handle(redisRequest);
+            }
+            case ECHO -> {
+                var requestHandler = new EchoRequestHandler();
+                yield requestHandler.handle(redisRequest);
+            }
+            case SET -> {
+                var requestHandler = new SetRequestHandler();
+                yield requestHandler.handle(redisRequest);
+            }
+            case GET -> {
+                var requestHandler = new GetRequestHandler();
+                yield requestHandler.handle(redisRequest);
+            }
             default -> responseMessage = "";
-        }
+        };
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
         sc.write(writeBuffer);
-    }
-
-    private static String handlePingRequest() {
-        String responseMessage = "";
-        byte[] responseMsg = "PONG".getBytes();
-
-        responseMessage = "+PONG" + msgPostfix;
-
-        return responseMessage;
-    }
-
-    private static String handleEchoRequest(RedisRequest redisRequest) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(dollarMsgPrefix);
-
-        List<String> elements = redisRequest.getElements();
-        for (int i = 0; i < elements.size(); i++) {
-            String s = elements.get(i);
-            if(i == 0) {
-                sb.append(s.length());
-                sb.append(msgPostfix);
-            }
-
-            sb.append(s);
-            sb.append(msgPostfix);
-        }
-
-        return sb.toString();
-    }
-
-    private static String handleSetRequest(RedisRequest redisRequest) {
-        List<String> elements = redisRequest.getElements();
-
-        if(elements.size() != 2) {
-            throw new RuntimeException();
-        }
-
-        String key = elements.get(0);
-        String value = elements.get(1);
-
-        boolean success = CacheStore.put(key, value);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(plusMsgPrefix);
-        sb.append("OK");
-        sb.append(msgPostfix);
-
-        return sb.toString();
-    }
-
-    private static String handleGetRequest(RedisRequest redisRequest) {
-        List<String> elements = redisRequest.getElements();
-
-        if(elements.size() != 1) {
-            throw new RuntimeException();
-        }
-
-        String key = elements.getFirst();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(dollarMsgPrefix);
-
-        Optional<String> valueOptional = CacheStore.get(key);
-        String value = valueOptional.orElse("");
-
-        int size;
-        if(!value.isEmpty()) {
-            sb.append(value.length());
-        }
-        else {
-            sb.append(-1);
-        }
-
-        sb.append(msgPostfix);
-
-        if(!value.isEmpty()) {
-            sb.append(value);
-            sb.append(msgPostfix);
-        }
-
-        return sb.toString();
-
     }
 }
