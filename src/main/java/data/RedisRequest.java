@@ -2,6 +2,7 @@ package data;
 
 import resp.Command;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RedisRequest {
@@ -13,7 +14,7 @@ public class RedisRequest {
     public RedisRequest() {
         this.command = null;
         this.numberOfElements = -1;
-        this.elements = List.of();
+        this.elements = new ArrayList<>();
     }
 
     public RedisRequest(Command command, int numberOfElements, List<String> elements) {
