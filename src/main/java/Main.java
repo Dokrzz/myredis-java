@@ -47,6 +47,8 @@ class Main {
                   else if((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
                       String incomingMsg = readNewMessage(key);
                       System.out.println(incomingMsg);
+
+                      writeResponse(key);
                   }
 
                   it.remove();
@@ -74,7 +76,11 @@ class Main {
       return new String(readBuffer.array()).trim();
   }
 
-  private static void writeResponse() {
+  private static void writeResponse(SelectionKey key) throws IOException {
+        String responseMsg = "PONG";
+        ByteBuffer writeBuffer =  ByteBuffer.wrap(responseMsg.getBytes());
 
+        SocketChannel sc = (SocketChannel) key.channel();
+        sc.write(writeBuffer);
   }
 }
