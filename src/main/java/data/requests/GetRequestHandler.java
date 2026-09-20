@@ -21,7 +21,7 @@ public class GetRequestHandler implements IRequestHandler {
         String key = elements.getFirst();
 
         StringBuilder sb = new StringBuilder();
-        sb.append(BULK_STRING);
+        sb.append(BULK_STRING.getValue());
 
         Optional<String> valueOptional = CacheStore.get(key);
         String value = valueOptional.orElse("");
@@ -34,11 +34,11 @@ public class GetRequestHandler implements IRequestHandler {
             sb.append(-1);
         }
 
-        sb.append(TERMINATE);
+        sb.append(TERMINATE.getValue());
 
         if(!value.isEmpty()) {
             sb.append(value);
-            sb.append(TERMINATE);
+            sb.append(TERMINATE.getValue());
         }
 
         return sb.toString();

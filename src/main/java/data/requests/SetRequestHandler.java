@@ -22,7 +22,7 @@ public class SetRequestHandler implements IRequestHandler {
 
         boolean success = CacheStore.put(key, value);
 
-        String sb = SIMPLE_STRING + "OK" + TERMINATE;
+        String sb = SIMPLE_STRING.getValue() + "OK" + TERMINATE.getValue();
 
         return sb;
     }

@@ -8,7 +8,7 @@ public class PingRequestHandler implements IRequestHandler {
     public String handle(RedisRequest redisRequest) {
         String responseMessage = "";
 
-        responseMessage = SIMPLE_STRING + "PONG" + TERMINATE;
+        responseMessage = SIMPLE_STRING.getValue() + "PONG" + TERMINATE.getValue();
 
         return responseMessage;
     }
