@@ -104,7 +104,6 @@ public class RedisServer {
                 if(i == 0) {
                     sb.append(s.length());
                     sb.append(msgPostfix);
-                    continue;
                 }
 
                 sb.append(s);
