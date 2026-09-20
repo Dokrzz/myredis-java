@@ -96,7 +96,6 @@ public class RedisServer {
     private static String getPingResponse() {
         String responseMessage = "";
         byte[] responseMsg = "PONG".getBytes();
-        int responseByteCount = responseMsg.length;
 
         responseMessage = "+PONG" + msgPostfix;
 
