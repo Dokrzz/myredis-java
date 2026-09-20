@@ -86,7 +86,7 @@ public class RedisServer {
 
         switch(redisRequest.getCommand()) {
             case PING -> responseMessage = getPingResponse();
-            case ECHO -> responseMessage = getEchoResponse();
+            case ECHO -> responseMessage = getEchoResponse(redisRequest);
         }
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
