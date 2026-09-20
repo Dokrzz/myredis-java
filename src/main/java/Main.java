@@ -1,32 +1,67 @@
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.StandardSocketOptions;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 
-public class Main {
-  public static void main(String[] args){
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
-    System.out.println("Logs from your program will appear here!");
+class Main {
 
-        ServerSocket serverSocket = null;
-        Socket clientSocket = null;
-        int port = 6379;
-        try {
-          serverSocket = new ServerSocket(port);
-          // Since the tester restarts your program quite often, setting SO_REUSEADDR
-          // ensures that we don't run into 'Address already in use' errors
-          serverSocket.setReuseAddress(true);
-          // Wait for connection from client.
-          clientSocket = serverSocket.accept();
-        } catch (IOException e) {
-          System.out.println("IOException: " + e.getMessage());
-        } finally {
-          try {
-            if (clientSocket != null) {
-              clientSocket.close();
-            }
-          } catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage());
+    private static int REDIS_PORT = 6379;
+
+    static void main(String[] args) throws IOException {
+        serve(REDIS_PORT);
+  }
+
+  private static void serve(int port) throws IOException {
+      try(ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
+          serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+          serverSocketChannel.configureBlocking(true);
+          serverSocketChannel.bind(new InetSocketAddress("0.0.0.0", port));
+
+          Selector selector = Selector.open();
+
+          serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+          System.out.println("Redis server listening on port: " + port);
+
+          while(true) {
+              selector.select();
+
+              Set<SelectionKey> selectionKeys = selector.selectedKeys();
+              Iterator<SelectionKey> it = selectionKeys.iterator();
+
+              while(it.hasNext()) {
+                  SelectionKey key = it.next();
+
+                  if((key.readyOps() & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
+                      ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+                      SocketChannel sc = ssc.accept();
+
+                      sc.configureBlocking(false);
+                      sc.register(selector, SelectionKey.OP_READ);
+                  }
+
+                  else if((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
+                      // Read the data
+                      SocketChannel sc = (SocketChannel) key.channel();
+
+                      ByteBuffer readBuffer = ByteBuffer.allocate(256);
+                      sc.read(readBuffer);
+
+                      String inMessage = new String(readBuffer.array()).trim();
+                      System.out.println("The message is: " + inMessage);
+                  }
+
+                  it.remove();
+              }
           }
-        }
+      }
   }
 }
