@@ -84,11 +84,11 @@ public class RedisServer {
         String responseMessage = "";
 
         if(commandToArgs.containsKey(Command.PING)) {
-//            byte[] responseMsg = "PONG".getBytes();
-//            int responseByteCount = responseMsg.length;
-//
-//            String responseBytes = msgPrefix + responseByteCount + msgPostfix;
-//            String responseMessage = "+PONG" + msgPostfix;
+            byte[] responseMsg = "PONG".getBytes();
+            int responseByteCount = responseMsg.length;
+
+            String responseBytes = msgPrefix + responseByteCount + msgPostfix;
+            responseMessage = "+PONG" + msgPostfix;
         }
 
         else if(commandToArgs.containsKey(Command.ECHO)){
