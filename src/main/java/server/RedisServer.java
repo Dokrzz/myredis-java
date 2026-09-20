@@ -14,6 +14,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class RedisServer {
@@ -156,7 +157,9 @@ public class RedisServer {
 
         StringBuilder sb = new StringBuilder();
         sb.append(plusMsgPrefix);
-        sb.append(CacheStore.get(key));
+        Optional<String> value = CacheStore.get(key);
+
+        value.ifPresent(sb::append);
         sb.append(msgPostfix);
 
         return sb.toString();
