@@ -41,27 +41,40 @@ class Main {
                   SelectionKey key = it.next();
 
                   if((key.readyOps() & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
-                      ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
-                      SocketChannel sc = ssc.accept();
-
-                      sc.configureBlocking(false);
-                      sc.register(selector, SelectionKey.OP_READ);
+                      acceptNewConnection(key, selector);
                   }
 
                   else if((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
-                      // Read the data
-                      SocketChannel sc = (SocketChannel) key.channel();
-
-                      ByteBuffer readBuffer = ByteBuffer.allocate(256);
-                      sc.read(readBuffer);
-
-                      String inMessage = new String(readBuffer.array()).trim();
-                      System.out.println("The message is: " + inMessage);
+                      String incomingMsg = readNewMessage(key);
+                      System.out.println(incomingMsg);
                   }
 
                   it.remove();
               }
           }
       }
+  }
+
+  private static void acceptNewConnection(SelectionKey key, Selector selector) throws IOException {
+
+          ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+          SocketChannel sc = ssc.accept();
+
+          sc.configureBlocking(false);
+          sc.register(selector, SelectionKey.OP_READ);
+  }
+
+  private static String readNewMessage(SelectionKey key) throws IOException {
+      // Read the data
+      SocketChannel sc = (SocketChannel) key.channel();
+
+      ByteBuffer readBuffer = ByteBuffer.allocate(256);
+      sc.read(readBuffer);
+
+      return new String(readBuffer.array()).trim();
+  }
+
+  private static void writeResponse() {
+
   }
 }
