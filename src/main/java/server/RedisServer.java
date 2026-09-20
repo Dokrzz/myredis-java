@@ -1,5 +1,6 @@
 package server;
 
+import data.RedisRequest;
 import resp.Command;
 import resp.Parser;
 
@@ -48,9 +49,9 @@ public class RedisServer {
                         acceptNewConnection(key, selector);
                     } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
                         String incomingMsg = readNewMessage(key);
-                        HashMap<Command, List<String>> commandToArgs = Parser.parse(incomingMsg);
+                        RedisRequest request = Parser.parse(incomingMsg);
 
-                        writeResponse(key, commandToArgs);
+                        writeResponse(key, request);
                     }
 
                     it.remove();
@@ -78,44 +79,46 @@ public class RedisServer {
         return new String(readBuffer.array()).trim();
     }
 
-    private static void writeResponse(SelectionKey key, HashMap<Command, List<String>> commandToArgs) throws IOException {
+    private static void writeResponse(SelectionKey key, RedisRequest redisRequest) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
 
         String responseMessage = "";
 
-        if(commandToArgs.containsKey(Command.PING)) {
-            byte[] responseMsg = "PONG".getBytes();
-            int responseByteCount = responseMsg.length;
-
-            String responseBytes = msgPrefix + responseByteCount + msgPostfix;
-            responseMessage = "+PONG" + msgPostfix;
-
+        switch(redisRequest.getCommand()) {
+            case PING -> responseMessage = getPingResponse();
+            case ECHO -> responseMessage = getEchoResponse();
         }
-
-        else if(commandToArgs.containsKey(Command.ECHO)){
-            StringBuilder sb = new StringBuilder();
-            sb.append(msgPrefix);
-
-            List<String> arguments = commandToArgs.get(Command.ECHO);
-
-
-            for (int i = 0; i < arguments.size(); i++) {
-                String s = arguments.get(i);
-                System.out.println("i -> " + arguments.size());
-                if(i == 0) {
-                    sb.append(s.length());
-                    sb.append(msgPostfix);
-                }
-
-                sb.append(s);
-                sb.append(msgPostfix);
-            }
-
-            responseMessage = sb.toString();
-        }
-
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
         sc.write(writeBuffer);
+    }
+
+    private static String getPingResponse() {
+        String responseMessage = "";
+        byte[] responseMsg = "PONG".getBytes();
+        int responseByteCount = responseMsg.length;
+
+        responseMessage = "+PONG" + msgPostfix;
+
+        return responseMessage;
+    }
+
+    private static String getEchoResponse(RedisRequest redisRequest) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(msgPrefix);
+
+        List<String> elements = redisRequest.getElements();
+        for (int i = 0; i < elements.size(); i++) {
+            String s = elements.get(i);
+            if(i == 0) {
+                sb.append(s.length());
+                sb.append(msgPostfix);
+            }
+
+            sb.append(s);
+            sb.append(msgPostfix);
+        }
+
+        return sb.toString();
     }
 }

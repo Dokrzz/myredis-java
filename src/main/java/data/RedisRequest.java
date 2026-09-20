@@ -1,10 +1,10 @@
-package dao;
+package data;
 
 import resp.Command;
 
 import java.util.List;
 
-final public class RedisRequest {
+public class RedisRequest {
 
     private Command command;
     private int numberOfElements;

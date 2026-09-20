@@ -1,50 +1,44 @@
 package resp;
 
-import dao.RedisRequest;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import data.RedisRequest;
 
 public class Parser {
     private static final String terminator = "\r\n";
 
-    public static HashMap<Command, List<String>> parse(String request) {
+    public static RedisRequest parse(String request) {
         String[] tokens = request.split(terminator);
 
         validate(tokens);
 
         RedisRequest redisRequest = new RedisRequest();
 
-        String commandKey = "";
-        List<String> commandArgs = new ArrayList<>();
-
-
         for(int i = 0; i < tokens.length; i++) {
             String text = tokens[i];
-            if(i == 0) {
-                String[] numberOfElementsString = text.split("*");
+            if(text.charAt(0) == '*') {
+                String[] numberOfElementsString = text.split("");
 
                 int numberOfElements = Integer.parseInt(numberOfElementsString[1]);
                 redisRequest.setNumberOfElements(numberOfElements);
             }
 
-            else {
-                if(text.charAt(0) == '$')
-                    continue;
+            else if (text.charAt(0) == '$'){
+                continue;
+            }
 
-                commandArgs.add(tokens[i]);
+            else {
+
+                if(i == 1) {
+                    Command command = Command.valueOf(tokens[i]);
+                    redisRequest.setCommand(command);
+                }
+
+                else {
+                    redisRequest.addElement(text);
+                }
             }
         }
 
-        if(!commandKey.isEmpty()) {
-            Optional<Command> command = Command.fromValue(commandKey);
-
-            command.ifPresent(key -> commandToArgs.put(key, commandArgs));
-        }
-
-        return commandToArgs;
+        return redisRequest;
 
     }
 
