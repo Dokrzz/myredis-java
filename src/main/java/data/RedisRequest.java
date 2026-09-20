@@ -55,4 +55,13 @@ public class RedisRequest {
     public void addElement(String element) {
         elements.add(element);
     }
+
+    @Override
+    public String toString() {
+        return "RedisRequest{" +
+                "command=" + command +
+                ", numberOfElements=" + numberOfElements +
+                ", elements=" + elements +
+                '}';
+    }
 }

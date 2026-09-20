@@ -83,6 +83,7 @@ public class RedisServer {
         SocketChannel sc = (SocketChannel) key.channel();
 
         String responseMessage = "";
+        System.out.println(redisRequest.toString());
 
         switch(redisRequest.getCommand()) {
             case PING -> responseMessage = getPingResponse();
