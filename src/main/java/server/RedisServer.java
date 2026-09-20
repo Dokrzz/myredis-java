@@ -134,8 +134,6 @@ public class RedisServer {
         String key = elements.get(0);
         String value = elements.get(1);
 
-        CacheStore cacheStore = CacheStore.getInstance();
-
         boolean success = CacheStore.put(key, value);
 
         StringBuilder sb = new StringBuilder();
@@ -144,5 +142,23 @@ public class RedisServer {
         sb.append(msgPostfix);
 
         return sb.toString();
+    }
+
+    private static String handleGetRequest(RedisRequest redisRequest) {
+        List<String> elements = redisRequest.getElements();
+
+        if(elements.size() != 1) {
+            throw new RuntimeException();
+        }
+
+        String key = elements.get(0);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(plusMsgPrefix);
+        sb.append(CacheStore.get(key));
+        sb.append(msgPostfix);
+
+        return sb.toString();
+
     }
 }
