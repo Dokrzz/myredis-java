@@ -176,11 +176,6 @@ public class RedisServer {
             sb.append(msgPostfix);
         }
 
-
-
-
-        sb.append(msgPostfix);
-
         return sb.toString();
 
     }
