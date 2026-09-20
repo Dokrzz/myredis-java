@@ -1,5 +1,8 @@
 package server;
 
+import resp.Command;
+import resp.Parser;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
@@ -8,7 +11,9 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class RedisServer {
@@ -43,9 +48,9 @@ public class RedisServer {
                         acceptNewConnection(key, selector);
                     } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
                         String incomingMsg = readNewMessage(key);
-                        System.out.println(incomingMsg);
+                        HashMap<Command, List<String>> commandToArgs = Parser.parse(incomingMsg);
 
-                        writeResponse(key);
+                        writeResponse(key, commandToArgs);
                     }
 
                     it.remove();
@@ -73,13 +78,36 @@ public class RedisServer {
         return new String(readBuffer.array()).trim();
     }
 
-    private static void writeResponse(SelectionKey key) throws IOException {
+    private static void writeResponse(SelectionKey key, HashMap<Command, List<String>> commandToArgs) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
-        byte[] responseMsg = "PONG".getBytes();
-        int responseByteCount = responseMsg.length;
 
-        String responseBytes = msgPrefix + responseByteCount + msgPostfix;
-        String responseMessage = "+PONG" + msgPostfix;
+        String responseMessage = "";
+
+        if(commandToArgs.containsKey(Command.PING)) {
+//            byte[] responseMsg = "PONG".getBytes();
+//            int responseByteCount = responseMsg.length;
+//
+//            String responseBytes = msgPrefix + responseByteCount + msgPostfix;
+//            String responseMessage = "+PONG" + msgPostfix;
+        }
+
+        else if(commandToArgs.containsKey(Command.ECHO)){
+            StringBuilder sb = new StringBuilder();
+            sb.append(msgPrefix);
+
+            List<String> arguments = commandToArgs.get(Command.ECHO);
+            int numOfArgs = arguments.size();
+            sb.append(numOfArgs);
+            sb.append(msgPostfix);
+
+            for (String s: arguments) {
+                sb.append(s);
+                sb.append(msgPostfix);
+            }
+
+            responseMessage = sb.toString();
+        }
+
 
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
