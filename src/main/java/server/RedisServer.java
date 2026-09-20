@@ -95,7 +95,7 @@ public class RedisServer {
                 var requestHandler = new GetRequestHandler();
                 yield requestHandler.handle(redisRequest);
             }
-            default -> responseMessage = "";
+            default ->  "";
         };
 
         ByteBuffer writeBuffer = ByteBuffer.wrap(responseMessage.getBytes());
