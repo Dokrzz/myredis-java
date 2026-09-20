@@ -96,11 +96,11 @@ public class RedisServer {
             sb.append(msgPrefix);
 
             List<String> arguments = commandToArgs.get(Command.ECHO);
-            int numOfArgs = arguments.size();
 
 
             for (int i = 0; i < arguments.size(); i++) {
                 String s = arguments.get(i);
+                System.out.println("s -> " + s );
                 if(i == 0) {
                     sb.append(s.length());
                     sb.append(msgPostfix);
