@@ -29,7 +29,9 @@ public class Parser {
 
                 if(i == 1) {
                     Command command = Command.valueOf(tokens[i]);
-                    redisRequest.setCommand(command);
+
+                    if(command.getValue() != null)
+                        redisRequest.setCommand(command);
                 }
 
                 else {
