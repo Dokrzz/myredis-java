@@ -6,7 +6,7 @@ import java.util.Optional;
 public final class CacheStore {
 
     private static CacheStore INSTANCE;
-    private static HashMap<String, String> redisStore = new HashMap<>();
+    private static HashMap<String, RedisValue> redisStore = new HashMap<>();
 
     private CacheStore() {}
 
@@ -19,14 +19,24 @@ public final class CacheStore {
     }
 
     public static boolean put(String key, String value) {
-        redisStore.put(key, value);
+        redisStore.put(key, new RedisValue(value));
         return true;
     }
 
     public static Optional<String> get(String key) {
-        String value = redisStore.get(key);
+        RedisValue valueObject = redisStore.get(key);
 
-        return Optional.ofNullable(value);
+        if(valueObject == null) {
+            return Optional.empty();
+        }
+        else if(valueObject.isExpired()) {
+            redisStore.remove(key);
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(valueObject.get());
+        }
+
     }
 
 

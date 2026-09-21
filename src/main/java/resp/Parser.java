@@ -4,10 +4,12 @@ import data.requests.RedisRequest;
 import enums.Command;
 
 public class Parser {
-    private static final String terminator = "\r\n";
+    private static final String TERMINATOR = "\r\n";
+
+    private Parser() {}
 
     public static RedisRequest parse(String request) {
-        String[] tokens = request.split(terminator);
+        String[] tokens = request.split(TERMINATOR);
 
         validate(tokens);
 

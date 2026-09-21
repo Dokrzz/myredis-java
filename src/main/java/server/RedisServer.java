@@ -14,10 +14,16 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
+import java.util.logging.Logger;
+
+
 public class RedisServer {
 
-    final private static int DEFAULT_REDIS_PORT = 6379;
-    
+    private static final int DEFAULT_REDIS_PORT = 6379;
+
+    static Logger logger = Logger.getLogger(RedisServer.class.getName());
+
+
     public void serve() throws IOException {
         try (ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
             serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
@@ -28,7 +34,7 @@ public class RedisServer {
 
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            System.out.println("Redis server listening on port: " + DEFAULT_REDIS_PORT);
+            logger.info("Redis server listening on port: " + DEFAULT_REDIS_PORT);
 
             while (true) {
                 selector.select();
@@ -76,7 +82,7 @@ public class RedisServer {
     private static void writeResponse(SelectionKey key, RedisRequest redisRequest) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
 
-        System.out.println(redisRequest.toString());
+        logger.info(redisRequest.toString());
 
         String responseMessage = switch(redisRequest.getCommand()) {
             case PING -> {

@@ -15,7 +15,7 @@ public class GetRequestHandler implements IRequestHandler {
         List<String> elements = redisRequest.getElements();
 
         if(elements.size() != 1) {
-            throw new RuntimeException();
+            throw new IllegalStateException();
         }
 
         String key = elements.getFirst();
@@ -26,7 +26,6 @@ public class GetRequestHandler implements IRequestHandler {
         Optional<String> valueOptional = CacheStore.get(key);
         String value = valueOptional.orElse("");
 
-        int size;
         if(!value.isEmpty()) {
             sb.append(value.length());
         }

@@ -5,10 +5,6 @@ import java.util.List;
 import static enums.DataType.*;
 
 public class EchoRequestHandler implements IRequestHandler {
-    private RedisRequest redisRequest;
-
-    public EchoRequestHandler() {
-    }
 
     @Override
     public String handle(RedisRequest redisRequest) {
