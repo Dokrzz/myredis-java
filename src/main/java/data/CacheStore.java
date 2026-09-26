@@ -18,9 +18,8 @@ public final class CacheStore {
         return INSTANCE;
     }
 
-    public static boolean put(String key, String value) {
-        redisStore.put(key, new RedisValue(value));
-        return true;
+    public static void put(String key, String value, long expiryInMilliSeconds) {
+        redisStore.put(key, new RedisValue(value, expiryInMilliSeconds));
     }
 
     public static Optional<String> get(String key) {

@@ -16,7 +16,7 @@ public class RedisValue {
         this.expiryInMilliseconds = -1;
     }
 
-    public RedisValue(String value, int expiryInMilliseconds) {
+    public RedisValue(String value, long expiryInMilliseconds) {
         this.value = value;
         this.createdAt = LocalDate.now(ZoneId.of("UTC"));
 

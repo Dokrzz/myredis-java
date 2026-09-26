@@ -1,6 +1,7 @@
 package data.requests;
 
 import data.CacheStore;
+import enums.Argument;
 
 import java.util.List;
 
@@ -9,6 +10,8 @@ import static enums.DataType.TERMINATE;
 
 public class SetRequestHandler implements IRequestHandler {
 
+    private Argument expiryType;
+    private long expirtyAmount;
     int expiryInMilliSeconds = -1;
 
 
@@ -24,7 +27,9 @@ public class SetRequestHandler implements IRequestHandler {
         String value = elements.get(1);
 
 
-        boolean success = CacheStore.put(key, value);
+
+
+        CacheStore.put(key, value, expiryInMilliSeconds);
 
         String sb = SIMPLE_STRING.getValue() + "OK" + TERMINATE.getValue();
 
