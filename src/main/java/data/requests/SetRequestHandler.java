@@ -29,13 +29,20 @@ public class SetRequestHandler implements IRequestHandler, IParser {
             throw new IllegalStateException();
         }
 
-        String key = elements.get(0);
-        String value = elements.get(1);
+        parse(elements);
 
+        if(options.containsKey(Option.EX)) {
+            List<String> args = options.get(Option.EX);
+            int expiryInSeconds = Integer.parseInt(args.getFirst());
+            this.expiryInMilliSeconds = expiryInSeconds *1000;
+        }
 
+        else if(options.containsKey(Option.PX)) {
+            List<String> args = options.get(Option.PX);
+            this.expiryInMilliSeconds = Integer.parseInt(args.getFirst());
+        }
 
-
-        CacheStore.put(key, value, expiryInMilliSeconds);
+        CacheStore.put(this.key, this.value, expiryInMilliSeconds);
 
         String sb = SIMPLE_STRING.getValue() + "OK" + TERMINATE.getValue();
 
