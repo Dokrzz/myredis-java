@@ -1,7 +1,10 @@
 package resp;
 
 import data.requests.RedisRequest;
-import enums.Command;
+import enums.*;
+
+import static enums.DataType.ARRAY;
+import static enums.DataType.BULK_STRING;
 
 public class Parser {
     private static final String TERMINATOR = "\r\n";
@@ -17,14 +20,14 @@ public class Parser {
 
         for(int i = 0; i < tokens.length; i++) {
             String text = tokens[i];
-            if(text.charAt(0) == '*') {
+            if(text.charAt(0) == ARRAY.getValue().charAt(0)) {
                 String[] numberOfElementsString = text.split("");
 
                 int numberOfElements = Integer.parseInt(numberOfElementsString[1]);
                 redisRequest.setNumberOfElements(numberOfElements);
             }
 
-            else if (text.charAt(0) == '$'){
+            else if (text.charAt(0) == BULK_STRING.getValue().charAt(0)){
                 continue;
             }
 
