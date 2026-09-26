@@ -12,7 +12,7 @@ public class SetRequestHandler implements IRequestHandler {
 
     private Argument expiryType;
     private long expirtyAmount;
-    int expiryInMilliSeconds = -1;
+    int expiryInMilliSeconds = 0;
 
 
     @Override
