@@ -2,14 +2,14 @@ package enums;
 
 import java.util.Optional;
 
-public enum Argument {
+public enum Option {
 
     PX ("PX"),
     EX ("EX");
 
     private final String value;
 
-    Argument(String value) {
+    Option(String value) {
         this.value = value;
     }
 
@@ -17,10 +17,10 @@ public enum Argument {
         return value;
     }
 
-    public static Optional<Argument> fromValue(String value) {
-        for (Argument argument : values()) {
-            if (argument.value.equals(value)) {
-                return Optional.of(argument);
+    public static Optional<Option> fromValue(String value) {
+        for (Option option : values()) {
+            if (option.value.equals(value)) {
+                return Optional.of(option);
             }
         }
 
