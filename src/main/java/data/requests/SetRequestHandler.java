@@ -13,7 +13,7 @@ public class SetRequestHandler implements IRequestHandler, IParser {
 
     private Option expiryType;
     private long expirtyAmount;
-    int expiryInMilliSeconds = 0;
+    int expiryInMilliSeconds = -1;
     String key;
     String value;
 

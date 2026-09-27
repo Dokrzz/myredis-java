@@ -24,7 +24,7 @@ public class RedisValue {
         this.createdAt = LocalDateTime.now(ZoneId.of("UTC"));
 
         if(expiryInMilliseconds < 0)
-            throw new IllegalArgumentException();
+            this.expiryInMilliseconds = Integer.MAX_VALUE;
         else
             this.expiryInMilliseconds = expiryInMilliseconds;
     }
