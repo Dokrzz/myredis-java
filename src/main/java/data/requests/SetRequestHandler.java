@@ -44,6 +44,8 @@ public class SetRequestHandler implements IRequestHandler, IParser {
 
         CacheStore.put(this.key, this.value, expiryInMilliSeconds);
 
+        System.out.println("Expiry is : " + expiryInMilliSeconds);
+
         String sb = SIMPLE_STRING.getValue() + "OK" + TERMINATE.getValue();
 
         return sb;
