@@ -42,7 +42,7 @@ public class RedisValue {
 
 
             System.out.println("Time difference is " + ChronoUnit.MILLIS.between(now, createdAtZones));
-            return ChronoUnit.MILLIS.between(now, createdAtZones) > expiryInMilliseconds;
+            return ChronoUnit.MILLIS.between(createdAtZones, now) > expiryInMilliseconds;
         }
     }
 
