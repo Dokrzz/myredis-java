@@ -5,8 +5,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-import static java.lang.Math.abs;
-
 public class RedisValue {
 
     private String value;
@@ -44,7 +42,7 @@ public class RedisValue {
 
 
             System.out.println("Time difference is " + ChronoUnit.MILLIS.between(now, createdAtZones));
-            return abs(ChronoUnit.MILLIS.between(now, createdAtZones)) > expiryInMilliseconds;
+            return ChronoUnit.MILLIS.between(now, createdAtZones) > expiryInMilliseconds;
         }
     }
 
