@@ -40,7 +40,8 @@ public class RedisValue {
             System.out.println("Now is : " + now.toString());
             System.out.println("Created is : " + createdAtZones.toString());
 
-            return ChronoUnit.MILLIS.between(now, createdAtZones) > 10;
+
+            return ChronoUnit.MILLIS.between(now, createdAtZones) > expiryInMilliseconds;
         }
     }
 
