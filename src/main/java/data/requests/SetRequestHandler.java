@@ -18,7 +18,7 @@ public class SetRequestHandler implements IRequestHandler, IParser {
     String value;
 
     List<String> requiredArguments;
-    HashMap<Option, List<String>> options;
+    HashMap<Option, List<String>> options = new HashMap<>();
 
 
     @Override
@@ -31,14 +31,14 @@ public class SetRequestHandler implements IRequestHandler, IParser {
 
         parse(elements);
 
-        if(options.containsKey(Option.EX)) {
-            List<String> args = options.get(Option.EX);
+        if(this.options.containsKey(Option.EX)) {
+            List<String> args = this.options.get(Option.EX);
             int expiryInSeconds = Integer.parseInt(args.getFirst());
             this.expiryInMilliSeconds = expiryInSeconds *1000;
         }
 
-        else if(options.containsKey(Option.PX)) {
-            List<String> args = options.get(Option.PX);
+        else if(this.options.containsKey(Option.PX)) {
+            List<String> args = this.options.get(Option.PX);
             this.expiryInMilliSeconds = Integer.parseInt(args.getFirst());
         }
 
