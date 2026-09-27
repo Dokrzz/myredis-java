@@ -37,6 +37,9 @@ public class RedisValue {
             ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
             ZonedDateTime createdAtZones = createdAt.atZone(ZoneId.of("UTC"));
 
+            System.out.println("Now is : " + now.toString());
+            System.out.println("Created is : " + createdAtZones.toString());
+
             return ChronoUnit.MILLIS.between(now, createdAtZones) > 10;
         }
     }
