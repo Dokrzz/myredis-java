@@ -1,1 +1,1 @@
-Building my own version of Redis just for fun!
+Building my own implementation of a Redis server just for fun!
